@@ -39,5 +39,4 @@ AJIT NOVA
 
 📜 License
 
-This project is currently a learning project.# MATH-SOLVED
-MATH SOLVED - Smart Mathematics Solver
+This project is currently a learning project.
