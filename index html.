@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020617">
+<title>MATH SOLVED</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#020617;color:#eaf6ff;
+ font-family:Arial,sans-serif;padding:18px;
+}
+header{text-align:center;padding:20px 0}
+.logo{
+ font-size:35px;font-weight:900;color:#00eaff;
+ text-shadow:0 0 18px #078bff;
+}
+header p{color:#9bb7d3}
+.container{max-width:600px;margin:auto}
+.card{
+ background:#071426;border:1px solid #087fba;
+ border-radius:18px;padding:20px;margin:16px 0;
+ box-shadow:0 0 18px #007bff18;
+}
+h2{font-size:19px;color:#00eaff;margin-top:0}
+input,select{
+ width:100%;padding:14px;margin:8px 0;
+ border-radius:10px;border:1px solid #164b70;
+ background:#020b19;color:white;font-size:16px;
+}
+button{
+ width:100%;padding:14px;border:0;border-radius:10px;
+ background:linear-gradient(90deg,#078bff,#00eaff);
+ color:#00101b;font-weight:bold;font-size:16px;
+ margin-top:8px;cursor:pointer;
+}
+.result{
+ display:none;margin-top:15px;padding:14px;
+ border-radius:10px;background:#031e2c;
+ border:1px solid #00aaff;overflow-wrap:anywhere;
+}
+.tabs{display:flex;gap:8px}
+.tabs button{flex:1;font-size:14px}
+footer{text-align:center;color:#7792ac;font-size:12px;padding:20px}
+</style>
+</head>
+
+<body>
+<header>
+ <div class="logo">MATH SOLVED</div>
+ <p id="tagline">Your Smart Mathematics Assistant</p>
+ <select id="language" onchange="changeLanguage()">
+  <option value="en">English</option>
+  <option value="hi">हिंदी</option>
+ </select>
+</header>
+
+<main class="container">
+ <div class="card">
+  <h2 id="solverTitle">🧮 Math Solver</h2>
+  <input id="question" placeholder="Example: 25 * 16">
+  <button id="solveBtn" onclick="solve()">Solve Question</button>
+  <div id="answer" class="result"></div>
+ </div>
+
+ <div class="card">
+  <h2 id="calcTitle">🔢 Basic Calculator</h2>
+  <input id="a" type="number" placeholder="First number">
+  <select id="operation">
+   <option value="+">Addition (+)</option>
+   <option value="-">Subtraction (-)</option>
+   <option value="*">Multiplication (×)</option>
+   <option value="/">Division (÷)</option>
+   <option value="%">Remainder (%)</option>
+  </select>
+  <input id="b" type="number" placeholder="Second number">
+  <button id="calcBtn" onclick="calculate()">Calculate</button>
+  <div id="calcAnswer" class="result"></div>
+ </div>
+</main>
+
+<footer>MATH SOLVED © 2026</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function show(id,text){
+ $(id).style.display="block";
+ $(id).textContent=text;
+}
+
+function solve(){
+ const q=$("question").value.trim();
+ if(!q){
+  show("answer","Please enter a math question.");
+  return;
+ }
+ try{
+  if(!/^[0-9+\-*/().%\s]+$/.test(q))
+   throw Error("Only basic arithmetic is supported in this version.");
+
+  const tokens=q.match(/\d+(?:\.\d+)?|[()+\-*/%]/g)||[];
+  if(tokens.join("")!==q.replace(/\s/g,""))
+   throw Error("Invalid expression.");
+
+  const result=Function('"use strict";return ('+q+')')();
+  if(typeof result!=="number"||!Number.isFinite(result))
+   throw Error("Invalid calculation.");
+
+  show("answer","Answer: "+result);
+ }catch(e){
+  show("answer","Could not solve this question. Try an example such as 25 * 16.");
+ }
+}
+
+function calculate(){
+ const a=Number($("a").value);
+ const b=Number($("b").value);
+ if($("a").value===""||$("b").value===""){
+  show("calcAnswer","Enter both numbers.");
+  return;
+ }
+ const op=$("operation").value;
+ if(op==="/"&&b===0){
+  show("calcAnswer","Cannot divide by zero.");
+  return;
+ }
+ let r;
+ switch(op){
+  case "+":r=a+b;break;
+  case "-":r=a-b;break;
+  case "*":r=a*b;break;
+  case "/":r=a/b;break;
+  case "%":r=a%b;break;
+ }
+ show("calcAnswer","Answer: "+r);
+}
+
+function changeLanguage(){
+ const hi=$("language").value==="hi";
+ $("tagline").textContent=hi?"आपका स्मार्ट गणित सहायक":"Your Smart Mathematics Assistant";
+ $("solverTitle").textContent=hi?"🧮 गणित हल करें":"🧮 Math Solver";
+ $("solveBtn").textContent=hi?"सवाल हल करें":"Solve Question";
+ $("question").placeholder=hi?"उदाहरण: 25 * 16":"Example: 25 * 16";
+ $("calcTitle").textContent=hi?"🔢 सामान्य कैलकुलेटर":"🔢 Basic Calculator";
+ $("a").placeholder=hi?"पहली संख्या":"First number";
+ $("b").placeholder=hi?"दूसरी संख्या":"Second number";
+ $("calcBtn").textContent=hi?"गणना करें":"Calculate";
+}
+</script>
+</body>
+</html>
